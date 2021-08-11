@@ -27,13 +27,21 @@ import "./Board.css";
  *
  **/
 
-function Board({ nrows, ncols, chanceLightStartsOn }) {
+function Board({ nrows=3, ncols=3, chanceLightStartsOn=0.3 }) {
   const [board, setBoard] = useState(createBoard());
 
   /** create a board nrows high/ncols wide, each cell randomly lit or unlit */
   function createBoard() {
+    
     let initialBoard = [];
-    // TODO: create array-of-arrays of true/false values
+    for(let i=0;i<nrows;i++){
+      let row=[];
+      for(let j=0;j<ncols;j++){
+        row.push(Math.random() <= chanceLightStartsOn)
+      }
+      initialBoard.push(row);
+    }
+    
     return initialBoard;
   }
 
@@ -64,9 +72,9 @@ function Board({ nrows, ncols, chanceLightStartsOn }) {
   // if the game is won, just show a winning msg & render nothing else
 
   // TODO
-
+  console.log(board);
   // make table board
-
+  return (<div>test</div>)
   // TODO
 }
 
