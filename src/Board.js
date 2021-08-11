@@ -27,7 +27,7 @@ import "./Board.css";
  *
  **/
 
-function Board({ nrows=3, ncols=3, chanceLightStartsOn=0.3 }) {
+function Board({ nrows=3, ncols=3, chanceLightStartsOn=0.7 }) {
   const [board, setBoard] = useState(createBoard());
 
   /** create a board nrows high/ncols wide, each cell randomly lit or unlit */
@@ -47,6 +47,7 @@ function Board({ nrows=3, ncols=3, chanceLightStartsOn=0.3 }) {
 
   function hasWon() {
     // TODO: check the board in state to determine whether the player has won.
+    //all off = win
   }
 
   function flipCellsAround(coord) {
