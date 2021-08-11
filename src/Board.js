@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Cell from "./Cell";
 import "./Board.css";
+import "bootstrap"
 
 /** Game board of Lights out.
  *
@@ -45,9 +46,20 @@ function Board({ nrows = 3, ncols = 3, chanceLightStartsOn = 0.7 }) {
   }
 
   function generateBoard() {
-    return board.map((row) =>
-      row.map((col) => <Cell isLit={col} flipCellsAroundMe={flipCellsAround} />)
-    );
+    return board.map((row, rowIdx) => {
+      return (
+        <tr>
+        {row.map((col, colIdx) => {
+          return (<Cell
+            key={colIdx}
+            isLit={col} 
+            flipCellsAroundMe={evt =>flipCellsAround(`${rowIdx}-${colIdx}`)} 
+            />
+          );
+        })}
+        </tr>
+      )
+    });
   }
 
   function hasWon() {
@@ -71,7 +83,7 @@ function Board({ nrows = 3, ncols = 3, chanceLightStartsOn = 0.7 }) {
       };
 
       // Create a deep copy of the old board
-      const newBoard = oldBoard;
+      const newBoard = [...oldBoard];
 
       // Toggle cell, cell to the left, to the right, above and below to oposite state
       flipCell(y, x, newBoard);
@@ -87,7 +99,9 @@ function Board({ nrows = 3, ncols = 3, chanceLightStartsOn = 0.7 }) {
   // if the game is won, just show a winning msg & render nothing else
 
   // board {array nxm};
-  return <div></div>;
+  return (<div>
+      {hasWon() ? "Congrets" : generateBoard()}
+  </div>);
 }
 
 export default Board;
