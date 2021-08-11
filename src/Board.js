@@ -27,56 +27,67 @@ import "./Board.css";
  *
  **/
 
-function Board({ nrows=3, ncols=3, chanceLightStartsOn=0.7 }) {
+function Board({ nrows = 3, ncols = 3, chanceLightStartsOn = 0.7 }) {
   const [board, setBoard] = useState(createBoard());
 
   /** create a board nrows high/ncols wide, each cell randomly lit or unlit */
   function createBoard() {
-    
     let initialBoard = [];
-    for(let i=0;i<nrows;i++){
-      let row=[];
-      for(let j=0;j<ncols;j++){
-        row.push(Math.random() <= chanceLightStartsOn)
+    for (let i = 0; i < nrows; i++) {
+      let row = [];
+      for (let j = 0; j < ncols; j++) {
+        row.push(Math.random() <= chanceLightStartsOn);
       }
       initialBoard.push(row);
     }
-    
+
     return initialBoard;
   }
 
+  function generateBoard() {
+    return board.map((row) =>
+      row.map((col) => <Cell isLit={col} flipCellsAroundMe={flipCellsAround} />)
+    );
+  }
+
   function hasWon() {
-    // TODO: check the board in state to determine whether the player has won.
-    //all off = win
+    for (let row of board) {
+      if (row.some((col) => col === true)) {
+        return false;
+      }
+    }
+    return true;
   }
 
   function flipCellsAround(coord) {
-    setBoard(oldBoard => {
+    setBoard((oldBoard) => {
       const [y, x] = coord.split("-").map(Number);
 
       const flipCell = (y, x, boardCopy) => {
         // if this coord is actually on board, flip it
-
         if (x >= 0 && x < ncols && y >= 0 && y < nrows) {
           boardCopy[y][x] = !boardCopy[y][x];
         }
       };
 
-      // TODO: Make a (deep) copy of the oldBoard
+      // Create a deep copy of the old board
+      const newBoard = oldBoard;
 
-      // TODO: in the copy, flip this cell and the cells around it
+      // Toggle cell, cell to the left, to the right, above and below to oposite state
+      flipCell(y, x, newBoard);
+      flipCell(y, x - 1, newBoard);
+      flipCell(y, x + 1, newBoard);
+      flipCell(y + 1, x, newBoard);
+      flipCell(y - 1, x, newBoard);
 
       // TODO: return the copy
+      return newBoard;
     });
   }
-
   // if the game is won, just show a winning msg & render nothing else
 
-  // TODO
-  console.log(board);
-  // make table board
-  return (<div>test</div>)
-  // TODO
+  // board {array nxm};
+  return <div></div>;
 }
 
 export default Board;
