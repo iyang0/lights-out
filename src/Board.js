@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import Cell from "./Cell";
 import "./Board.css";
-import "bootstrap"
 
 /** Game board of Lights out.
  *
@@ -44,32 +43,46 @@ function Board({ nrows = 3, ncols = 3, chanceLightStartsOn = 0.7 }) {
 
     return initialBoard;
   }
+  //NOTE: there's an array.from()
 
+  //NOTE: can create helper functions for generate board for row and cols
+
+  /** Function that generates DOM elements for the boards */
   function generateBoard() {
     return board.map((row, rowIdx) => {
       return (
-        <tr>
-        {row.map((col, colIdx) => {
-          return (<Cell
-            key={colIdx}
-            isLit={col} 
-            flipCellsAroundMe={evt =>flipCellsAround(`${rowIdx}-${colIdx}`)} 
+        <tr key={rowIdx}>
+          {row.map((col, colIdx) => (
+            <Cell
+              key={`${rowIdx}-${colIdx}`}
+              isLit={col}
+              flipCellsAroundMe={(
+                evt // No need to use this evt.
+              ) => flipCellsAround(`${rowIdx}-${colIdx}`)}
             />
-          );
-        })}
+          ))}
         </tr>
-      )
+      );
     });
   }
 
+  /** Function that checks to see if player wins. */
   function hasWon() {
+    // check if every cell is false
     for (let row of board) {
       if (row.some((col) => col === true)) {
+        // NOTE: Don't need === for true
         return false;
       }
     }
     return true;
   }
+
+  /** Flips cell and neighboring cells to the oposite boolean type
+   * Copies the existing board and modifies the copy in place.
+   * @param {String} coord --- string of the y and x coordinate of the cell
+   *
+   */
 
   function flipCellsAround(coord) {
     setBoard((oldBoard) => {
@@ -92,16 +105,17 @@ function Board({ nrows = 3, ncols = 3, chanceLightStartsOn = 0.7 }) {
       flipCell(y + 1, x, newBoard);
       flipCell(y - 1, x, newBoard);
 
-      // TODO: return the copy
       return newBoard;
     });
   }
   // if the game is won, just show a winning msg & render nothing else
 
   // board {array nxm};
-  return (<div>
-      {hasWon() ? "Congrets" : generateBoard()}
-  </div>);
+  return (
+    <table>
+      <tbody>{hasWon() ? "Congrets" : generateBoard()}</tbody>
+    </table>
+  );
 }
 
 export default Board;
